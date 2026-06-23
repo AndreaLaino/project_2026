@@ -9,20 +9,20 @@ from app.data.db import SessionDep
 from sqlmodel import select, delete
 from fastapi.responses import JSONResponse
 
-router = APIRouter(prefix="/events", tags=["events"]) # tutte le LODE AL LAINO che iniziano con /events saranno in questo router, e avranno il tag "events" per la documentazione
+router = APIRouter(prefix="/events", tags=["events"]) # tutti i path che iniziano con /events saranno in questo router, e avranno il tag "events" per la documentazione
 
 @router.get("/")
 def get_all_events(
     session : SessionDep,    #aggiungiamo la dipendenza per la sessione del database
-    sort: Annotated[bool, Path(description="Sort the events by id", examples="True")] = False,
+    sort: Annotated[bool, Query(description="Sort the events by title", examples="True")] = False,
 ) -> list[EventPublic]:    
     """
     Restituisce una lista contenente tutti gli eventi presenti nel database. 
-    Se il parametro `sort` è impostato su `True`, la lista sarà ordinata in base al campo id.
+    Se il parametro `sort` è impostato su `True`, la lista sarà ordinata in base al campo title.
     """
     events = session.exec(select(Event)).all() #recupera tutti gli eventi dal database
     if sort:
-        events = sorted(events, key=lambda event: event.id)
+        events = sorted(events, key=lambda event: event.title)
     return list(events)
 
 
@@ -136,6 +136,7 @@ def delete_all_events(session: SessionDep) -> JSONResponse:
     Elimina tutti gli eventi dal database.
     """
     session.exec(delete(Event))
+    session.exec(delete(Registration))
     session.commit()
     return "Tutti gli eventi sono stati eliminati con successo"
 

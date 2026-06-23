@@ -8,12 +8,12 @@ from app.data.db import SessionDep
 from sqlmodel import select, delete
 from fastapi.responses import JSONResponse
 
-router = APIRouter(prefix="/users", tags=["users"]) # tutte le LODE AL LAINO che iniziano con /users saranno in questo router, e avranno il tag "users" per la documentazione
+router = APIRouter(prefix="/users", tags=["users"]) # tutti i path che iniziano con /users saranno in questo router, e avranno il tag "users" per la documentazione
 
 @router.get("/")
 def get_all_users(
     session : SessionDep,    #aggiungiamo la dipendenza per la sessione del database
-    sort: Annotated[bool, Path(description="Sort the users by username", examples="True")] = False,
+    sort: Annotated[bool, Query(description="Sort the users by username", examples="True")] = False,
 ) -> list[UserPublic]:    
     """
     Restituisce una lista contenente tutti gli eventi presenti nel database. 
@@ -65,6 +65,7 @@ def delete_all_users(session: SessionDep) -> JSONResponse:
     Elimina tutti gli utenti dal database.
     """
     session.exec(delete(User))
+    session.exec(delete(Registration))
     session.commit()
     return "Tutti gli utenti sono stati eliminati con successo"
 
