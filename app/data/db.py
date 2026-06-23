@@ -1,11 +1,10 @@
-from sqlmodel import create_engine, SQLModel, Session, select
+from sqlmodel import create_engine, SQLModel, Session
 from typing import Annotated
 from fastapi import Depends
 import os
 from faker import Faker
 from app.config import config
-# TODO: remember to import all the DB models here
-from app.models.registration import Registration  # NOQA
+from app.models.registration import Registration
 from app.models.event import Event
 from app.models.user import User
 
@@ -22,8 +21,37 @@ def init_database() -> None:
     if not ds_exists:
         f = Faker("it_IT")
         with Session(engine) as session:
-            # TODO: (optional) initialize the database with fake data
-            ...
+            events = []
+            for i in range(10):
+                event = Event(
+                    title=f.sentence(nb_words=4)[:50],
+                    description=f.text(max_nb_chars=300),
+                    date=f.date_time_between(start_date="now", end_date="+1y"),
+                    location=f.city(),
+                )
+                session.add(event)
+                events.append(event)
+
+            users = []
+            for i in range(10):
+                user = User(
+                    username=f.unique.user_name()[:50],
+                    name=f.name()[:50],
+                    email=f.unique.email()[:100],
+                )
+                session.add(user)
+                users.append(user)
+
+            session.commit()
+
+            for i in range(5):
+                registration = Registration(
+                    username=users[i].username,
+                    event_id=events[i].id,
+                )
+                session.add(registration)
+
+            session.commit()
 
 
 def get_session():
