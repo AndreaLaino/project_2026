@@ -9,9 +9,9 @@ from app.data.db import SessionDep
 from sqlmodel import select, delete
 from fastapi.responses import JSONResponse
 
-events_router = APIRouter(prefix="/events", tags=["events"]) # tutte le LODE AL LAINO che iniziano con /events saranno in questo router, e avranno il tag "events" per la documentazione
+router = APIRouter(prefix="/events", tags=["events"]) # tutte le LODE AL LAINO che iniziano con /events saranno in questo router, e avranno il tag "events" per la documentazione
 
-@events_router.get("/")
+@router.get("/")
 def get_all_events(
     session : SessionDep,    #aggiungiamo la dipendenza per la sessione del database
     sort: Annotated[bool, Path(description="Sort the events by id", example="True")] = False,
@@ -26,7 +26,7 @@ def get_all_events(
     return list(events)
 
 
-@events_router.post("/")
+@router.post("/")
 def add_event(
     event: EventCreate,
     session: SessionDep
@@ -41,8 +41,7 @@ def add_event(
                         content={"msg": "Evento creato con successo", "event_id": new_event.id},)
 
 
-
-@events_router.get("/{event_id}")
+@router.get("/{event_id}")
 def get_event_by_id(
     session : SessionDep,   
     event_id: Annotated[int, Path(description="ID dell'evento che vogliamo", example=1)]
@@ -63,8 +62,7 @@ def get_event_by_id(
     })
 
 
-
-@events_router.put("/{event_id}")
+@router.put("/{event_id}")
 def update_event(
     session : SessionDep,    
     event_id: Annotated[int, Path(description="ID dell'evento che vogliamo aggiornare")],
@@ -89,7 +87,7 @@ def update_event(
     return "Evento aggiornato con successo"    
 
 
-@events_router.post("/{event_id}/register")
+@router.post("/{event_id}/register")
 def register_user_to_event(
     session: SessionDep,
     event_id: Annotated[int, Path(description="ID dell'evento a cui vogliamo registrare l'utente")],
@@ -123,7 +121,7 @@ def register_user_to_event(
     )
 
 
-@events_router.delete("/")
+@router.delete("/")
 def delete_all_events(session: SessionDep) -> JSONResponse:
     """
     Elimina tutti gli eventi dal database.
@@ -132,7 +130,7 @@ def delete_all_events(session: SessionDep) -> JSONResponse:
     session.commit()
     return "Tutti gli eventi sono stati eliminati con successo"
 
-@events_router.delete("/{event_id}")
+@router.delete("/{event_id}")
 def delete_events_by_id(
     session : SessionDep,    
     event_id: Annotated[int, Path(description="ID dell'evento che vogliamo cancellare")],

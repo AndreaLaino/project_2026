@@ -7,9 +7,9 @@ from app.data.db import SessionDep
 from sqlmodel import select, delete
 from fastapi.responses import JSONResponse
 
-users_router = APIRouter(prefix="/users", tags=["users"]) # tutte le LODE AL LAINO che iniziano con /users saranno in questo router, e avranno il tag "users" per la documentazione
+router = APIRouter(prefix="/users", tags=["users"]) # tutte le LODE AL LAINO che iniziano con /users saranno in questo router, e avranno il tag "users" per la documentazione
 
-@users_router.get("/")
+@router.get("/")
 def get_all_users(
     session : SessionDep,    #aggiungiamo la dipendenza per la sessione del database
     sort: Annotated[bool, Path(description="Sort the users by username", example="True")] = False,
@@ -24,7 +24,7 @@ def get_all_users(
     return list(users)
 
 
-@users_router.post("/")
+@router.post("/")
 def add_user(
     user: UserCreate,
     session: SessionDep
@@ -38,7 +38,7 @@ def add_user(
     return JSONResponse(status_code=201, 
                         content={"msg": "Utente creato con successo", "user_id": new_user.username},)
 
-@users_router.get("/{username}")
+@router.get("/{username}")
 def get_user_by_username(
     session : SessionDep,   
     username: Annotated[str, Path(description="Username dell'utente che vogliamo", example="john_pork")]
@@ -55,7 +55,7 @@ def get_user_by_username(
         "email": user.email,
     })
 
-@users_router.delete("/")
+@router.delete("/")
 def delete_all_users(session: SessionDep) -> JSONResponse:
     """
     Elimina tutti gli utenti dal database.
@@ -64,7 +64,7 @@ def delete_all_users(session: SessionDep) -> JSONResponse:
     session.commit()
     return "Tutti gli utenti sono stati eliminati con successo"
 
-@users_router.delete("/{username}")
+@router.delete("/{username}")
 def delete_user_by_username(
     session : SessionDep,    
     username: Annotated[str, Path(description="Username dell'utente che vogliamo cancellare")],

@@ -7,9 +7,9 @@ from app.data.db import SessionDep
 from sqlmodel import select, delete
 from fastapi.responses import JSONResponse
 
-registrations_router = APIRouter(prefix="/registrations", tags=["registrations"])
+router = APIRouter(prefix="/registrations", tags=["registrations"])
 
-@registrations_router.get("/")
+@router.get("/")
 def get_all_registrations(
     session : SessionDep,    #aggiungiamo la dipendenza per la sessione del database
     sort: Annotated[bool, Path(description="Sort the registrations by event_id", example="True")] = False,
@@ -23,7 +23,7 @@ def get_all_registrations(
         sorted(registrations, key=lambda reg: reg.event_id)
     return list(registrations)
 
-@registrations_router.delete("/")
+@router.delete("/")
 def delete_registration(
     session: SessionDep,
     username: Annotated[str, Query(description="Username dell'utente registrato")],
