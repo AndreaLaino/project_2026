@@ -40,12 +40,3 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", reload=True)
 
-    print("ajdajhgafeohufgeohiafbeiohqregohji")
-    
-    print("vediamo se funziona")
-
-    print("loda al laino ora e per sempre")
-
-    #ciao a tutti
-
-    #non vi saluto 
