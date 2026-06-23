@@ -22,7 +22,7 @@ def get_all_events(
     """
     events = session.exec(select(Event)).all() #recupera tutti gli eventi dal database
     if sort:
-        sorted(events, key=lambda event: event.id)
+        events = sorted(events, key=lambda event: event.id)
     return list(events)
 
 
@@ -107,6 +107,15 @@ def register_user_to_event(
         session.add(new_user)
         session.commit()
         existing_user = new_user
+
+    existing_registration = session.exec(
+        select(Registration).where(
+            Registration.username == existing_user.username,
+            Registration.event_id == event.id
+        )
+    ).first()
+    if existing_registration:
+        raise HTTPException(status_code=422, detail="Utente già registrato a questo evento")
     
     registration = Registration(username=existing_user.username, event_id=event.id)
     session.add(registration)

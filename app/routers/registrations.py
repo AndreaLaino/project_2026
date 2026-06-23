@@ -12,7 +12,7 @@ router = APIRouter(prefix="/registrations", tags=["registrations"])
 @router.get("/")
 def get_all_registrations(
     session : SessionDep,    #aggiungiamo la dipendenza per la sessione del database
-    sort: Annotated[bool, Path(description="Sort the registrations by event_id", example="True")] = False,
+    sort: Annotated[bool, Path(description="Sort the registrations by event_id", examples="True")] = False,
 ) -> list[Registration]:    
     """
     Restituisce una lista contenente tutte le registrazioni presenti nel database. 
@@ -20,7 +20,7 @@ def get_all_registrations(
     """
     registrations = session.exec(select(Registration)).all() #recupera tutte le registrazioni dal database
     if sort:
-        sorted(registrations, key=lambda reg: reg.event_id)
+        registrations = sorted(registrations, key=lambda reg: reg.event_id)
     return list(registrations)
 
 @router.delete("/")

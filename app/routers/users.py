@@ -20,7 +20,7 @@ def get_all_users(
     """
     users = session.exec(select(User)).all() #recupera tutti gli utenti dal database
     if sort:
-        sorted(users, key=lambda user: user.username)
+        users = sorted(users, key=lambda user: user.username)
     return list(users)
 
 
@@ -70,7 +70,7 @@ def delete_all_users(session: SessionDep) -> JSONResponse:
 @router.delete("/{username}")
 def delete_user_by_username(
     session : SessionDep,    
-    username: Annotated[str, Path(description="Username dell'utente che vogliamo cancellare")],
+    username: Annotated[str, Path(description="Username dell'utente che vogliamo cancellare", examples="john_pork")],
 ):
     """
     Elimina l'utente con il username specificato.
