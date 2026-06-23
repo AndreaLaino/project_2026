@@ -152,7 +152,8 @@ def delete_events_by_id(
     if not event:
         raise HTTPException(status_code=404, detail="Evento non trovato")
     
-    session.exec(delete(Event).where(Event.id == event_id))
+    session.exec(delete(Registration).where(Registration.event_id == event_id))
+    session.delete(event)
     session.commit()
 
     return "Evento cancellato con successo"

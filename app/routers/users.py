@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Path, HTTPException, Query
 
+from app.models.registration import Registration
 from app.models.user import User, UserCreate, UserPublic
 
 from typing import Annotated
@@ -80,7 +81,8 @@ def delete_user_by_username(
     if not user:
         raise HTTPException(status_code=404, detail="Utente non trovato")
 
-    session.exec(delete(User).where(User.username == username))
+    session.exec(delete(Registration).where(Registration.username == username))
+    session.delete(user)
     session.commit()
 
     return "Utente cancellato con successo"
