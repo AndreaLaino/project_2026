@@ -52,6 +52,7 @@ def get_user_by_username(
         raise HTTPException(status_code=404, detail="Utente non trovato")
     return JSONResponse(status_code=200, content={
         "username": user.username,
+        "name": user.name,
         "email": user.email,
     })
 
