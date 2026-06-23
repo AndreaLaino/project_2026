@@ -2,7 +2,7 @@ from sqlmodel import create_engine, SQLModel, Session
 from typing import Annotated
 from fastapi import Depends
 import os
-from faker import Faker
+from faker import Faker #WHAT WAS THAT
 from app.config import config
 from app.models.registration import Registration
 from app.models.event import Event
