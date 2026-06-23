@@ -172,7 +172,7 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
-data/database.db
+app/data/database.db
 
 #altro
 .vscode/
