@@ -12,7 +12,7 @@ router = APIRouter(prefix="/users", tags=["users"]) # tutte le LODE AL LAINO che
 @router.get("/")
 def get_all_users(
     session : SessionDep,    #aggiungiamo la dipendenza per la sessione del database
-    sort: Annotated[bool, Path(description="Sort the users by username", example="True")] = False,
+    sort: Annotated[bool, Path(description="Sort the users by username", examples="True")] = False,
 ) -> list[UserPublic]:    
     """
     Restituisce una lista contenente tutti gli eventi presenti nel database. 
@@ -32,6 +32,8 @@ def add_user(
     """
     Aggiunge un nuovo utente al database.
     """
+    if user.username in session.exec(select(User.username)).all():
+        raise HTTPException(status_code=422, detail="Username già esistente")
     new_user = User.model_validate(user)
     session.add(new_user)
     session.commit()
@@ -41,7 +43,7 @@ def add_user(
 @router.get("/{username}")
 def get_user_by_username(
     session : SessionDep,   
-    username: Annotated[str, Path(description="Username dell'utente che vogliamo", example="john_pork")]
+    username: Annotated[str, Path(description="Username dell'utente che vogliamo", examples="john_pork")]
 ) -> JSONResponse:
     """
     Restituisce l'utente con il username specificato.

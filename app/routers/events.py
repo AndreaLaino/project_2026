@@ -14,7 +14,7 @@ router = APIRouter(prefix="/events", tags=["events"]) # tutte le LODE AL LAINO c
 @router.get("/")
 def get_all_events(
     session : SessionDep,    #aggiungiamo la dipendenza per la sessione del database
-    sort: Annotated[bool, Path(description="Sort the events by id", example="True")] = False,
+    sort: Annotated[bool, Path(description="Sort the events by id", examples="True")] = False,
 ) -> list[EventPublic]:    
     """
     Restituisce una lista contenente tutti gli eventi presenti nel database. 
@@ -44,7 +44,7 @@ def add_event(
 @router.get("/{event_id}")
 def get_event_by_id(
     session : SessionDep,   
-    event_id: Annotated[int, Path(description="ID dell'evento che vogliamo", example=1)]
+    event_id: Annotated[int, Path(description="ID dell'evento che vogliamo", examples=1)]
 ) -> JSONResponse:
     """
     Restituisce l'evento con l'ID specificato.
@@ -113,7 +113,7 @@ def register_user_to_event(
     session.commit()
     
     return JSONResponse(
-        status_code=201, 
+        status_code=200, 
         content={
             "msg": "Utente registrato con successo all'evento",
             "event_id": event.id, 
