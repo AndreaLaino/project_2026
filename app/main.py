@@ -10,7 +10,7 @@ import os
 if Path(__file__).parent == Path(os.getcwd()):
     config.root_dir = "."
 
-# You can add imports from here...
+# You can add imports from here....
 
 from fastapi import FastAPI
 from app.routers import frontend
